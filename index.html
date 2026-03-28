@@ -4,113 +4,207 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>Calculadora Éxodo Safa Pro</title>
+    <title>Éxodo Safa Pro</title>
     <style>
-        /* IMPORTACIÓN DE FUENTES RÚSTICAS */
-        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Special+Elite&display=swap');
-
-        :root { 
-            --color-vino: #6e1d3e; 
-            --color-negro: #1a1a1a;
-            --fondo-pergamino: #e4d8c1; 
-            --borde-pergamino: #bfa57a;
-            --primary: #2196F3;
-            --fuente-titulo: 'MedievalSharp', cursive;
-            --fuente-texto: 'Special Elite', cursive;
+        :root {
+            --vino: #800020;
+            --azul: #00d2ff;
+            --negro: #121212;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
-        body { 
-            font-family: var(--fuente-texto); 
-            background-color: #5d4037;
-            background-image: repeating-linear-gradient(rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 40px);
-            margin: 0; 
-            padding: 10px; 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #121212, #3a0011, #001f3f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            padding: 15px;
         }
 
-        .container { 
-            background: var(--fondo-pergamino); 
-            max-width: 450px; 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
             width: 100%;
-            border-radius: 15px; 
-            padding: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            border: 3px solid var(--borde-pergamino);
-            box-sizing: border-box;
+            max-width: 400px;
+            padding: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        h1 { 
-            font-family: var(--fuente-titulo);
-            text-align: center; 
-            color: var(--color-negro); 
-            font-size: 1.6rem; 
-            margin-bottom: 15px; 
-            border-bottom: 2px solid var(--color-vino); 
-            padding-bottom: 8px; 
-        }
-        
-        /* Sección de Nombre */
-        .name-section { margin-bottom: 15px; text-align: center; }
-        label.name-label { font-size: 0.8rem; font-weight: bold; color: var(--color-vino); display: block; margin-bottom: 5px; text-transform: uppercase; }
-        input[type="text"]#input-nombre { 
-            width: 100%; padding: 10px; border: 2px solid var(--borde-pergamino); border-radius: 5px; 
-            font-size: 1.2rem; font-family: var(--fuente-titulo); text-align: center; box-sizing: border-box; background: rgba(255,255,255,0.5);
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0 0 20px 0;
+            background: linear-gradient(to right, #fff, var(--azul));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Lista de Items Scrollable */
-        .scroll-area { max-height: 30vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; border: 1px inset var(--borde-pergamino); background: rgba(255,255,255,0.3); border-radius: 5px; padding: 5px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 6px; background: white; border-radius: 5px; border-bottom: 2px solid var(--borde-pergamino); }
-        .item .name { font-weight: bold; font-size: 0.9rem; color: #444; font-family: var(--fuente-titulo); }
-        input[type="number"] { width: 50px; padding: 6px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-family: var(--fuente-texto); }
-
-        /* Sección de Tribu y Especiales */
-        .section-title { font-size: 0.8rem; font-weight: bold; color: var(--color-vino); margin: 15px 0 5px; text-transform: uppercase; font-family: var(--fuente-titulo); }
-        .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .score-card { padding: 10px; border-radius: 8px; color: white; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-        
-        /* Colores de las tarjetas */
-        .bg-plus { background: #2e7d32; } /* Verde bosque */
-        .bg-minus { background: #c62828; } /* Rojo ladrillo */
-        .bg-tribu { background: var(--color-vino); }
-        
-        .controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 5px; }
-        .btn-circle { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.3); color: white; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
-        
-        /* Total */
-        .footer { border-top: 2px solid var(--color-vino); padding-top: 10px; text-align: center; margin-top: 10px; }
-        #displayName { 
-            font-size: 1.2rem; font-family: var(--fuente-titulo); font-weight: bold; color: white; 
-            background: var(--color-negro); padding: 5px 20px; border-radius: 5px; display: inline-block; margin-bottom: 5px; 
+        /* Input Nombre Minimalista */
+        .name-section input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 12px;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.3s;
         }
-        #total-score { font-size: 3.5rem; font-weight: bold; color: var(--color-vino); margin: 0; font-family: var(--fuente-texto); }
-        .reset-btn { background: var(--color-negro); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: var(--fuente-texto); }
+
+        .name-section input:focus { border-color: var(--azul); box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); }
+
+        /* Lista de Items */
+        .scroll-area {
+            max-height: 25vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 8px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+
+        .item span { font-size: 0.9rem; font-weight: 500; opacity: 0.9; }
+
+        input[type="number"] {
+            width: 50px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--glass-border);
+            color: var(--azul);
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        /* Botones de Acción */
+        .section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; margin: 15px 0 10px; opacity: 0.6; text-align: center; }
+
+        .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .score-card {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; }
+
+        .btn-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            border: none;
+            background: var(--glass-border);
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-circle:active { transform: scale(0.9); background: var(--azul); }
+
+        /* Footer y Total */
+        .footer { margin-top: 25px; text-align: center; }
+
+        #displayName {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #total-score {
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
+        }
+
+        .reset-btn {
+            margin-top: 25px;
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: white;
+            color: var(--negro);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .reset-btn:hover { background: var(--azul); color: white; }
+
+        /* Colores específicos */
+        .color-plus { color: #00ff88; }
+        .color-minus { color: #ff4b2b; }
+        .color-tribu { color: var(--azul); }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Éxodo Sagrada Familia</h1>
+    <h1>ÉXODO SAFA</h1>
     
     <div class="name-section">
-        <label class="name-label">Nombre de la Tribu:</label>
-        <input type="text" id="input-nombre" placeholder="BENJAMÍN" oninput="actualizarNombre(); calcular()">
+        <input type="text" id="input-nombre" placeholder="NOMBRE DE TRIBU" oninput="actualizarNombre(); calcular()">
     </div>
 
     <div class="scroll-area" id="lista-items"></div>
 
     <div class="section-title">Bonos y Disciplina</div>
     <div class="grid-scores">
-        <div class="score-card bg-plus">
-            <span>PUNTOS MÁS (+15)</span>
+        <div class="score-card">
+            <span class="color-plus" style="font-size: 0.7rem; font-weight: bold;">MÁS (+15)</span>
             <div class="controls">
                 <button class="btn-circle" onclick="cambiarExtra('mas', -1)">-</button>
                 <b id="val-mas">0</b>
                 <button class="btn-circle" onclick="cambiarExtra('mas', 1)">+</button>
             </div>
         </div>
-        <div class="score-card bg-minus">
-            <span>PUNTOS MENOS (-20)</span>
+        <div class="score-card">
+            <span class="color-minus" style="font-size: 0.7rem; font-weight: bold;">MENOS (-20)</span>
             <div class="controls">
                 <button class="btn-circle" onclick="cambiarExtra('menos', -1)">-</button>
                 <b id="val-menos">0</b>
@@ -119,48 +213,32 @@
         </div>
     </div>
 
-    <div class="section-title">Resultados Tribu Zabulón</div>
+    <div class="section-title">Zabulón Ranking</div>
     <div class="grid-scores">
-        <div class="score-card bg-tribu">
-            <span>1er LUGAR (+100)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g1', -1)">-</button>
-                <b id="val-g1">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g1', 1)">+</button>
+        <div class="score-card" style="grid-column: span 2; display: flex; justify-content: space-around; align-items: center;">
+            <div>
+                <span class="color-tribu" style="font-size: 0.6rem; display: block;">1ER LUGAR</span>
+                <div class="controls">
+                    <button class="btn-circle" onclick="cambiarTribu('g1', -1)">-</button>
+                    <b id="val-g1">0</b>
+                    <button class="btn-circle" onclick="cambiarTribu('g1', 1)">+</button>
+                </div>
             </div>
-        </div>
-        <div class="score-card bg-tribu">
-            <span>2do LUGAR (+50)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g2', -1)">-</button>
-                <b id="val-g2">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g2', 1)">+</button>
-            </div>
-        </div>
-        <div class="score-card bg-tribu" style="opacity: 0.85;">
-            <span>3er LUGAR (+25)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g3', -1)">-</button>
-                <b id="val-g3">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g3', 1)">+</button>
-            </div>
-        </div>
-        <div class="score-card bg-tribu" style="opacity: 0.85;">
-            <span>PARTICIPAR (+15)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('part', -1)">-</button>
-                <b id="val-part">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('part', 1)">+</button>
+            <div style="border-left: 1px solid var(--glass-border); padding-left: 15px;">
+                <span class="color-tribu" style="font-size: 0.6rem; display: block;">PARTICIPAR</span>
+                <div class="controls">
+                    <button class="btn-circle" onclick="cambiarTribu('part', -1)">-</button>
+                    <b id="val-part">0</b>
+                    <button class="btn-circle" onclick="cambiarTribu('part', 1)">+</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="footer">
-        <div id="displayNameContainer">
-            <span id="displayName">MI CUENTA</span>
-        </div>
+        <span id="displayName">MI CUENTA</span>
         <div id="total-score">0</div>
-        <button class="reset-btn" onclick="resetear()">Limpiar Todo</button>
+        <button class="reset-btn" onclick="resetear()">Reset</button>
     </div>
 </div>
 
@@ -182,14 +260,13 @@
     items.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'item';
-        div.innerHTML = `<span class="name">${item.nombre}</span><input type="number" id="input-${index}" value="0" min="0" oninput="calcular()">`;
+        div.innerHTML = `<span>${item.nombre.toUpperCase()}</span><input type="number" id="input-${index}" value="0" min="0" oninput="calcular()">`;
         listaContainer.appendChild(div);
     });
 
     function actualizarNombre() {
         const nombreInput = document.getElementById('input-nombre').value;
-        const displayName = document.getElementById('displayName');
-        displayName.innerText = nombreInput.trim() !== "" ? nombreInput : "MI CUENTA";
+        document.getElementById('displayName').innerText = nombreInput.trim() !== "" ? nombreInput.toUpperCase() : "MI CUENTA";
     }
 
     function cambiarExtra(t, v) {
@@ -210,22 +287,20 @@
             total += (parseInt(document.getElementById(`input-${index}`).value) || 0) * item.pts;
         });
         total += (extras.mas * 15) - (extras.menos * 20);
-        total += (tribu.g1 * 100) + (tribu.g2 * 50) + (tribu.g3 * 25) + (tribu.part * 15);
+        total += (tribu.g1 * 100) + (tribu.part * 15);
         document.getElementById('total-score').innerText = total;
     }
 
     function resetear() {
         items.forEach((_, i) => document.getElementById(`input-${i}`).value = 0);
-        extras = { mas: 0, menos: 0 }; tribu = { g1: 0, g2: 0, g3: 0, part: 0 };
-        ['mas', 'menos', 'g1', 'g2', 'g3', 'part'].forEach(id => document.getElementById(`val-${id}`).innerText = 0);
+        extras = { mas: 0, menos: 0 }; tribu = { g1: 0, part: 0 };
+        ['mas', 'menos', 'g1', 'part'].forEach(id => document.getElementById(`val-${id}`).innerText = 0);
         document.getElementById('input-nombre').value = "";
         actualizarNombre();
         calcular();
     }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
