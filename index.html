@@ -6,13 +6,20 @@
     <link rel="manifest" href="manifest.json">
     <title>Calculadora Éxodo Pro</title>
     <style>
-        :root { --primary: #2196F3; --success: #4CAF50; --danger: #f44336; --warning: #ff9800; --bg: #f0f2f5; }
+        :root { --primary: #2196F3; --success: #4CAF50; --danger: #f44336; --warning: #ff9800; --bg: #f0f2f5; --tribu: #673AB7; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
         .container { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #333; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
         
-        .scroll-area { max-height: 40vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
+        /* Sección de Nombre */
+        .name-section { margin-bottom: 15px; }
+        label.name-label { font-size: 0.8rem; font-weight: bold; color: #666; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        input[type="text"]#input-nombre { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+
+        /* Lista de Items */
+        .scroll-area { max-height: 35vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 6px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .item .name { font-weight: bold; font-size: 0.9rem; color: #444; }
         input[type="number"] { width: 50px; padding: 6px; border: 2px solid #ddd; border-radius: 8px; text-align: center; }
 
         /* Sección de Tribu y Especiales */
@@ -21,21 +28,28 @@
         .score-card { padding: 10px; border-radius: 12px; color: white; text-align: center; }
         .bg-plus { background: var(--success); }
         .bg-minus { background: var(--danger); }
-        .bg-tribu { background: #673AB7; } /* Color para Zabulón/Tribu */
+        .bg-tribu { background: var(--tribu); }
         
         .controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 5px; }
         .btn-circle { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.3); color: white; font-weight: bold; cursor: pointer; }
         
+        /* Total */
         .footer { border-top: 2px solid #eee; padding-top: 10px; text-align: center; }
+        #displayName { font-size: 1.1rem; font-weight: bold; color: #555; text-transform: uppercase; background: #e3f2fd; padding: 8px 15px; border-radius: 20px; display: inline-block; margin-bottom: 5px; }
         #total-score { font-size: 3.2rem; font-weight: bold; color: var(--primary); margin: 0; }
-        .reset-btn { background: #666; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; }
+        .reset-btn { background: #666; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Puntos Éxodo</h1>
+    <h1>Puntos Éxodo Pro</h1>
     
+    <div class="name-section">
+        <label class="name-label" for="input-nombre">Nombre de la Tribu / Exodito:</label>
+        <input type="text" id="input-nombre" placeholder="Ej: BENJAMÍN" oninput="actualizarNombre(); calcular()">
+    </div>
+
     <div class="scroll-area" id="lista-items"></div>
 
     <div class="section-title">Bonos y Disciplina</div>
@@ -58,7 +72,7 @@
         </div>
     </div>
 
-    <div class="section-title">Resultados Tribu</div>
+    <div class="section-title">Resultados Tribu Zabulón</div>
     <div class="grid-scores">
         <div class="score-card bg-tribu">
             <span>1er LUGAR (+100)</span>
@@ -95,6 +109,9 @@
     </div>
 
     <div class="footer">
+        <div id="displayNameContainer">
+            <span id="displayName">MI CUENTA</span>
+        </div>
         <div id="total-score">0</div>
         <button class="reset-btn" onclick="resetear()">Limpiar Todo</button>
     </div>
@@ -122,6 +139,17 @@
         listaContainer.appendChild(div);
     });
 
+    function actualizarNombre() {
+        const nombreInput = document.getElementById('input-nombre').value;
+        const displayName = document.getElementById('displayName');
+        
+        if (nombreInput.trim() !== "") {
+            displayName.innerText = nombreInput;
+        } else {
+            displayName.innerText = "MI CUENTA";
+        }
+    }
+
     function cambiarExtra(t, v) {
         extras[t] = Math.max(0, extras[t] + v);
         document.getElementById(`val-${t}`).innerText = extras[t];
@@ -148,10 +176,19 @@
         items.forEach((_, i) => document.getElementById(`input-${i}`).value = 0);
         extras = { mas: 0, menos: 0 }; tribu = { g1: 0, g2: 0, g3: 0, part: 0 };
         ['mas', 'menos', 'g1', 'g2', 'g3', 'part'].forEach(id => document.getElementById(`val-${id}`).innerText = 0);
+        document.getElementById('input-nombre').value = ""; // Limpiar el nombre
+        actualizarNombre(); // Resetear el nombre mostrado
         calcular();
     }
 
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    // Registro de Service Worker para modo OFFLINE
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    }
 </script>
 </body>
 </html>
