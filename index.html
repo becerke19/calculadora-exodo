@@ -4,50 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>Calculadora Éxodo Pro</title>
+    <title>Calculadora Éxodo Safa Pro</title>
     <style>
-        :root { --primary: #2196F3; --success: #4CAF50; --danger: #f44336; --warning: #ff9800; --bg: #f0f2f5; --tribu: #673AB7; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .container { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+        /* IMPORTACIÓN DE FUENTES RÚSTICAS */
+        @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Special+Elite&display=swap');
+
+        :root { 
+            --color-vino: #6e1d3e; 
+            --color-negro: #1a1a1a;
+            --fondo-pergamino: #e4d8c1; 
+            --borde-pergamino: #bfa57a;
+            --primary: #2196F3;
+            --fuente-titulo: 'MedievalSharp', cursive;
+            --fuente-texto: 'Special Elite', cursive;
+        }
+
+        body { 
+            font-family: var(--fuente-texto); 
+            background-color: #5d4037;
+            background-image: repeating-linear-gradient(rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 40px);
+            margin: 0; 
+            padding: 10px; 
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            background: var(--fondo-pergamino); 
+            max-width: 450px; 
+            width: 100%;
+            border-radius: 15px; 
+            padding: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            border: 3px solid var(--borde-pergamino);
+            box-sizing: border-box;
+        }
+
+        h1 { 
+            font-family: var(--fuente-titulo);
+            text-align: center; 
+            color: var(--color-negro); 
+            font-size: 1.6rem; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid var(--color-vino); 
+            padding-bottom: 8px; 
+        }
         
         /* Sección de Nombre */
-        .name-section { margin-bottom: 15px; }
-        label.name-label { font-size: 0.8rem; font-weight: bold; color: #666; display: block; margin-bottom: 5px; text-transform: uppercase; }
-        input[type="text"]#input-nombre { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .name-section { margin-bottom: 15px; text-align: center; }
+        label.name-label { font-size: 0.8rem; font-weight: bold; color: var(--color-vino); display: block; margin-bottom: 5px; text-transform: uppercase; }
+        input[type="text"]#input-nombre { 
+            width: 100%; padding: 10px; border: 2px solid var(--borde-pergamino); border-radius: 5px; 
+            font-size: 1.2rem; font-family: var(--fuente-titulo); text-align: center; box-sizing: border-box; background: rgba(255,255,255,0.5);
+        }
 
-        /* Lista de Items */
-        .scroll-area { max-height: 35vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 6px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary); }
-        .item .name { font-weight: bold; font-size: 0.9rem; color: #444; }
-        input[type="number"] { width: 50px; padding: 6px; border: 2px solid #ddd; border-radius: 8px; text-align: center; }
+        /* Lista de Items Scrollable */
+        .scroll-area { max-height: 30vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; border: 1px inset var(--borde-pergamino); background: rgba(255,255,255,0.3); border-radius: 5px; padding: 5px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 8px; margin-bottom: 6px; background: white; border-radius: 5px; border-bottom: 2px solid var(--borde-pergamino); }
+        .item .name { font-weight: bold; font-size: 0.9rem; color: #444; font-family: var(--fuente-titulo); }
+        input[type="number"] { width: 50px; padding: 6px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-family: var(--fuente-texto); }
 
         /* Sección de Tribu y Especiales */
-        .section-title { font-size: 0.8rem; font-weight: bold; color: #666; margin: 15px 0 5px; text-transform: uppercase; }
+        .section-title { font-size: 0.8rem; font-weight: bold; color: var(--color-vino); margin: 15px 0 5px; text-transform: uppercase; font-family: var(--fuente-titulo); }
         .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .score-card { padding: 10px; border-radius: 12px; color: white; text-align: center; }
-        .bg-plus { background: var(--success); }
-        .bg-minus { background: var(--danger); }
-        .bg-tribu { background: var(--tribu); }
+        .score-card { padding: 10px; border-radius: 8px; color: white; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+        
+        /* Colores de las tarjetas */
+        .bg-plus { background: #2e7d32; } /* Verde bosque */
+        .bg-minus { background: #c62828; } /* Rojo ladrillo */
+        .bg-tribu { background: var(--color-vino); }
         
         .controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 5px; }
-        .btn-circle { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.3); color: white; font-weight: bold; cursor: pointer; }
+        .btn-circle { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.3); color: white; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
         
         /* Total */
-        .footer { border-top: 2px solid #eee; padding-top: 10px; text-align: center; }
-        #displayName { font-size: 1.1rem; font-weight: bold; color: #555; text-transform: uppercase; background: #e3f2fd; padding: 8px 15px; border-radius: 20px; display: inline-block; margin-bottom: 5px; }
-        #total-score { font-size: 3.2rem; font-weight: bold; color: var(--primary); margin: 0; }
-        .reset-btn { background: #666; color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .footer { border-top: 2px solid var(--color-vino); padding-top: 10px; text-align: center; margin-top: 10px; }
+        #displayName { 
+            font-size: 1.2rem; font-family: var(--fuente-titulo); font-weight: bold; color: white; 
+            background: var(--color-negro); padding: 5px 20px; border-radius: 5px; display: inline-block; margin-bottom: 5px; 
+        }
+        #total-score { font-size: 3.5rem; font-weight: bold; color: var(--color-vino); margin: 0; font-family: var(--fuente-texto); }
+        .reset-btn { background: var(--color-negro); color: white; border: none; padding: 12px; border-radius: 5px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: var(--fuente-texto); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Puntos Éxodo Pro</h1>
+    <h1>Éxodo Sagrada Familia</h1>
     
     <div class="name-section">
-        <label class="name-label" for="input-nombre">Nombre de la Tribu / Exodito:</label>
-        <input type="text" id="input-nombre" placeholder="Ej: BENJAMÍN" oninput="actualizarNombre(); calcular()">
+        <label class="name-label">Nombre de la Tribu:</label>
+        <input type="text" id="input-nombre" placeholder="BENJAMÍN" oninput="actualizarNombre(); calcular()">
     </div>
 
     <div class="scroll-area" id="lista-items"></div>
@@ -90,7 +137,7 @@
                 <button class="btn-circle" onclick="cambiarTribu('g2', 1)">+</button>
             </div>
         </div>
-        <div class="score-card bg-tribu" style="background: #9C27B0;">
+        <div class="score-card bg-tribu" style="opacity: 0.85;">
             <span>3er LUGAR (+25)</span>
             <div class="controls">
                 <button class="btn-circle" onclick="cambiarTribu('g3', -1)">-</button>
@@ -98,7 +145,7 @@
                 <button class="btn-circle" onclick="cambiarTribu('g3', 1)">+</button>
             </div>
         </div>
-        <div class="score-card bg-tribu" style="background: #9C27B0;">
+        <div class="score-card bg-tribu" style="opacity: 0.85;">
             <span>PARTICIPAR (+15)</span>
             <div class="controls">
                 <button class="btn-circle" onclick="cambiarTribu('part', -1)">-</button>
@@ -142,12 +189,7 @@
     function actualizarNombre() {
         const nombreInput = document.getElementById('input-nombre').value;
         const displayName = document.getElementById('displayName');
-        
-        if (nombreInput.trim() !== "") {
-            displayName.innerText = nombreInput;
-        } else {
-            displayName.innerText = "MI CUENTA";
-        }
+        displayName.innerText = nombreInput.trim() !== "" ? nombreInput : "MI CUENTA";
     }
 
     function cambiarExtra(t, v) {
@@ -176,18 +218,13 @@
         items.forEach((_, i) => document.getElementById(`input-${i}`).value = 0);
         extras = { mas: 0, menos: 0 }; tribu = { g1: 0, g2: 0, g3: 0, part: 0 };
         ['mas', 'menos', 'g1', 'g2', 'g3', 'part'].forEach(id => document.getElementById(`val-${id}`).innerText = 0);
-        document.getElementById('input-nombre').value = ""; // Limpiar el nombre
-        actualizarNombre(); // Resetear el nombre mostrado
+        document.getElementById('input-nombre').value = "";
+        actualizarNombre();
         calcular();
     }
 
-    // Registro de Service Worker para modo OFFLINE
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-            console.log('ServiceWorker registration failed: ', err);
-        });
+        navigator.serviceWorker.register('sw.js');
     }
 </script>
 </body>
