@@ -4,22 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>Calculadora de Puntos Éxodo</title>
+    <title>Calculadora Éxodo Pro</title>
     <style>
-        :root { --primary: #2196F3; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 15px; }
-        .container { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; font-size: 1.4rem; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        .scroll-area { max-height: 60vh; overflow-y: auto; padding-right: 5px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: #f8f9fa; border-radius: 10px; border-left: 5px solid var(--primary); }
-        .info { display: flex; flex-direction: column; }
-        .name { font-weight: bold; color: #444; text-transform: capitalize; }
-        .pts { font-size: 0.8rem; color: #777; }
-        input { width: 60px; padding: 8px; border: 2px solid #ddd; border-radius: 8px; text-align: center; font-size: 1rem; }
-        .footer { margin-top: 20px; padding-top: 15px; border-top: 2px solid #eee; text-align: center; }
-        .total-label { font-size: 0.9rem; color: #666; letter-spacing: 1px; }
-        #total-score { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 5px 0; }
-        button { background: #ff5252; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        :root { --primary: #2196F3; --success: #4CAF50; --danger: #f44336; --bg: #f0f2f5; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .container { background: white; max-width: 450px; margin: 0 auto; border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+        
+        /* Sección de Items */
+        .scroll-area { max-height: 45vh; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 6px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid var(--primary); }
+        .name { font-weight: bold; font-size: 0.9rem; color: #444; }
+        input[type="number"] { width: 55px; padding: 6px; border: 2px solid #ddd; border-radius: 8px; text-align: center; }
+
+        /* Sección de Puntos Especiales */
+        .extra-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .extra-card { padding: 10px; border-radius: 12px; text-align: center; color: white; position: relative; }
+        .bg-plus { background: var(--success); }
+        .bg-minus { background: var(--danger); }
+        .extra-card span { display: block; font-size: 0.8rem; margin-bottom: 5px; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-circle { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,0.3); color: white; font-weight: bold; cursor: pointer; }
+        
+        /* Total */
+        .footer { border-top: 2px solid #eee; padding-top: 10px; text-align: center; }
+        #total-score { font-size: 3.2rem; font-weight: bold; color: var(--primary); margin: 0; }
+        .reset-btn { background: #666; color: white; border: none; padding: 8px; border-radius: 8px; width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -27,49 +37,69 @@
 <div class="container">
     <h1>Calculadora de Puntos</h1>
     
-    <div class="scroll-area" id="lista-items">
+    <div class="scroll-area" id="lista-items"></div>
+
+    <div class="extra-section">
+        <div class="extra-card bg-plus">
+            <span>PUNTOS MÁS (+15)</span>
+            <div class="controls">
+                <button class="btn-circle" onclick="cambiarExtra('mas', -1)">-</button>
+                <b id="val-mas">0</b>
+                <button class="btn-circle" onclick="cambiarExtra('mas', 1)">+</button>
+            </div>
         </div>
+        <div class="extra-card bg-minus">
+            <span>PUNTOS MENOS (-20)</span>
+            <div class="controls">
+                <button class="btn-circle" onclick="cambiarExtra('menos', -1)">-</button>
+                <b id="val-menos">0</b>
+                <button class="btn-circle" onclick="cambiarExtra('menos', 1)">+</button>
+            </div>
+        </div>
+    </div>
 
     <div class="footer">
-        <div class="total-label">PUNTUACIÓN TOTAL</div>
         <div id="total-score">0</div>
-        <button onclick="resetear()">Limpiar Todo</button>
+        <button class="reset-btn" onclick="resetear()">Limpiar Todo</button>
     </div>
 </div>
 
 <script>
-    // Configuración de los puntos
     const items = [
-        { nombre: "Biblia", pts: 100 },
-        { nombre: "Invitado", pts: 100 },
-        { nombre: "Botiquín", pts: 50 },
-        { nombre: "Pañoleta", pts: 20 },
-        { nombre: "Paliacate", pts: 10 },
-        { nombre: "Banderín", pts: 10 },
-        { nombre: "Playera", pts: 5 },
-        { nombre: "Pantalón", pts: 5 },
-        { nombre: "Tenis", pts: 5 },
-        { nombre: "Piola", pts: 5 },
-        { nombre: "Libreta", pts: 5 },
-        { nombre: "Material", pts: 5 },
+        { nombre: "Biblia", pts: 100 }, { nombre: "Invitado", pts: 100 },
+        { nombre: "Botiquín", pts: 50 }, { nombre: "Pañoleta", pts: 20 },
+        { nombre: "Paliacate", pts: 10 }, { nombre: "Banderín", pts: 10 },
+        { nombre: "Playera", pts: 5 }, { nombre: "Pantalón", pts: 5 },
+        { nombre: "Tenis", pts: 5 }, { nombre: "Piola", pts: 5 },
+        { nombre: "Libreta", pts: 5 }, { nombre: "Material", pts: 5 },
         { nombre: "Pluma", pts: 1 }
     ];
 
+    let puntosMas = 0;
+    let puntosMenos = 0;
+
     const listaContainer = document.getElementById('lista-items');
 
-    // Generar la lista dinámicamente
     items.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'item';
         div.innerHTML = `
-            <div class="info">
-                <span class="name">${item.nombre}</span>
-                <span class="pts">${item.pts} pts c/u</span>
-            </div>
+            <span class="name">${item.nombre}</span>
             <input type="number" id="input-${index}" value="0" min="0" oninput="calcular()">
         `;
         listaContainer.appendChild(div);
     });
+
+    function cambiarExtra(tipo, valor) {
+        if (tipo === 'mas') {
+            puntosMas = Math.max(0, puntosMas + valor);
+            document.getElementById('val-mas').innerText = puntosMas;
+        } else {
+            puntosMenos = Math.max(0, puntosMenos + valor);
+            document.getElementById('val-menos').innerText = puntosMenos;
+        }
+        calcular();
+    }
 
     function calcular() {
         let total = 0;
@@ -77,20 +107,23 @@
             const cant = parseInt(document.getElementById(`input-${index}`).value) || 0;
             total += (cant * item.pts);
         });
+        
+        // Sumar bonos y restar penalizaciones
+        total += (puntosMas * 15);
+        total -= (puntosMenos * 20);
+        
         document.getElementById('total-score').innerText = total;
     }
 
     function resetear() {
-        items.forEach((_, index) => {
-            document.getElementById(`input-${index}`).value = 0;
-        });
+        items.forEach((_, index) => document.getElementById(`input-${index}`).value = 0);
+        puntosMas = 0; puntosMenos = 0;
+        document.getElementById('val-mas').innerText = 0;
+        document.getElementById('val-menos').innerText = 0;
         calcular();
     }
 
-    // Registro de Service Worker para modo OFFLINE
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
