@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>Éxodo Safa</title>
+    <title>Éxodo Safa Multi-Pro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
@@ -15,184 +16,464 @@
             --card-bg: #1E1E1E;
             --text-main: #FFFFFF;
             --text-muted: #A0A0A0;
+            --tribu-color: #2979FF;
         }
 
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 10px; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+            overflow-x: hidden;
+        }
 
-        /* Sistema de Pestañas (Tabs) */
-        .tabs-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; margin-bottom: 10px; }
-        .tab { background: var(--card-bg); padding: 8px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; font-size: 0.8rem; }
-        .tab.active { background: var(--primary-gradient); border: none; font-weight: bold; }
-        .add-tab { background: #333; color: white; border-radius: 50%; width: 35px; height: 35px; border: none; font-size: 1.5rem; cursor: pointer; flex-shrink: 0; }
+        /* Tabs */
+        .tabs-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin-bottom: 5px;
+        }
 
-        .container { background-color: var(--card-bg); max-width: 450px; margin: 0 auto; border-radius: 25px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .tab {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
 
-        h1 { text-align: center; font-weight: 800; font-size: 1.4rem; margin: 0 0 15px 0; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tab.active {
+            background: var(--primary-gradient);
+            border: none;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(255, 61, 0, 0.3);
+        }
 
-        .name-section input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 12px; color: white; text-align: center; font-weight: bold; outline: none; margin-bottom: 15px; }
-        .name-section input:focus { border-color: var(--primary); }
+        .add-tab {
+            background: #333;
+            color: white;
+            border-radius: 50%;
+            min-width: 40px;
+            height: 40px;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* Items con Botones +/- */
-        .scroll-area { max-height: 35vh; overflow-y: auto; margin-bottom: 15px; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 8px; }
-        .item-info b { font-size: 0.9rem; display: block; }
-        .item-info span { font-size: 0.7rem; color: var(--text-muted); }
-        
-        .counter-group { display: flex; align-items: center; gap: 12px; }
-        .btn-step { width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; font-weight: bold; cursor: pointer; }
-        .btn-step:active { transform: scale(0.9); background: var(--primary); }
-        .count-val { min-width: 20px; text-align: center; font-weight: bold; color: var(--primary); }
+        .container {
+            background-color: var(--card-bg);
+            max-width: 450px;
+            margin: 0 auto;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
 
-        /* Grid de Bonos */
-        .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .score-card { padding: 12px; border-radius: 15px; text-align: center; color: white; }
-        .bg-plus { background: linear-gradient(135deg, #00C853, #64DD17); }
-        .bg-minus { background: linear-gradient(135deg, #D50000, #FF1744); }
-        .bg-tribu { background: #2979FF; }
+        h1 {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin: 0 0 15px 0;
+            text-transform: uppercase;
+
+            /* Degradado */
+            background: var(--primary-gradient);
+
+            /* Compatibilidad para que el texto sea transparente y muestre el fondo */
+            -webkit-background-clip: text;
+            /* Para Chrome, Safari, Edge */
+            background-clip: text;
+            /* Estándar */
+            -webkit-text-fill-color: transparent;
+            /* Obligatorio para que funcione el clip */
+            color: transparent;
+            /* Respaldo */
+        }
+
+        .name-section input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            outline: none;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .name-section input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Items con botones */
+        .scroll-area {
+            max-height: 35vh;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+
+        .scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .item-info b {
+            font-size: 0.9rem;
+            color: #EEE;
+        }
+
+        .item-info span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .counter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-step {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+
+        .btn-step:active {
+            transform: scale(0.9);
+            background: var(--primary);
+        }
+
+        .count-val {
+            min-width: 25px;
+            text-align: center;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Secciones especiales */
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin: 15px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .grid-custom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-custom {
+            padding: 12px;
+            border-radius: 18px;
+            text-align: center;
+            color: white;
+        }
+
+        .bg-plus {
+            background: linear-gradient(135deg, #00C853, #64DD17);
+        }
+
+        .bg-minus {
+            background: linear-gradient(135deg, #D50000, #FF1744);
+        }
+
+        .bg-tribu {
+            background: linear-gradient(135deg, #304FFE, #2979FF);
+        }
 
         /* Footer */
-        .footer { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
-        #total-score { font-size: 3.5rem; font-weight: 800; margin: 0; line-height: 1; }
-        .reset-btn { width: 100%; padding: 15px; border-radius: 15px; border: none; background: #333; color: white; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .footer {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+
+        #total-score {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -2px;
+            color: white;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .reset-btn {
+            background: #333;
+            color: #FF1744;
+        }
+
+        .delete-btn {
+            background: rgba(255, 23, 68, 0.1);
+            color: #FF1744;
+            margin-top: 5px;
+            font-size: 0.7rem;
+            padding: 8px;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="tabs-container" id="tabs-list">
-    </div>
-<button class="add-tab" onclick="addNewSession()">+</button>
-
-<div class="container">
-    <h1>Puntuaciones Safa</h1>
-    
-    <div class="name-section">
-        <input type="text" id="input-nombre" placeholder="NOMBRE DE OPERACIÓN" oninput="saveCurrentData()">
+    <div class="tabs-header">
+        <div id="tabs-list" style="display: flex; gap: 10px;"></div>
+        <button class="add-tab" onclick="addNewSession()">+</button>
     </div>
 
-    <div class="scroll-area" id="items-list"></div>
+    <div class="container">
+        <h1>Éxodo Safa Pro</h1>
 
-    <div class="grid-scores">
-        <div class="score-card bg-plus">
-            <span style="font-size: 0.7rem; font-weight: bold;">PUNTOS MÁS (+15)</span>
-            <div class="counter-group" style="justify-content: center; margin-top: 5px;">
-                <button class="btn-step" onclick="updateExtra('mas', -1)">-</button>
-                <b id="val-mas">0</b>
-                <button class="btn-step" onclick="updateExtra('mas', 1)">+</button>
+        <div class="name-section">
+            <input type="text" id="input-nombre" placeholder="NOMBRE TRIBU" oninput="saveCurrentData()">
+        </div>
+
+        <div class="scroll-area" id="items-list"></div>
+
+        <div class="section-label">Bonos y Disciplina</div>
+        <div class="grid-custom">
+            <div class="card-custom bg-plus">
+                <span style="font-size: 0.65rem; font-weight: bold;">PUNTOS MÁS (+15)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateExtra('mas', -1)">-</button>
+                    <b id="val-mas" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateExtra('mas', 1)">+</button>
+                </div>
+            </div>
+            <div class="card-custom bg-minus">
+                <span style="font-size: 0.65rem; font-weight: bold;">PUNTOS MENOS (-20)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateExtra('menos', -1)">-</button>
+                    <b id="val-menos" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateExtra('menos', 1)">+</button>
+                </div>
             </div>
         </div>
-        <div class="score-card bg-minus">
-            <span style="font-size: 0.7rem; font-weight: bold;">PUNTOS MENOS (-20)</span>
-            <div class="counter-group" style="justify-content: center; margin-top: 5px;">
-                <button class="btn-step" onclick="updateExtra('menos', -1)">-</button>
-                <b id="val-menos">0</b>
-                <button class="btn-step" onclick="updateExtra('menos', 1)">+</button>
+
+        <div class="section-label">Ranking Tribu</div>
+        <div class="grid-custom">
+            <div class="card-custom bg-tribu">
+                <span style="font-size: 0.6rem;">1er LUGAR (+100)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateTribu('g1', -1)">-</button>
+                    <b id="val-g1" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateTribu('g1', 1)">+</button>
+                </div>
             </div>
+            <div class="card-custom bg-tribu">
+                <span style="font-size: 0.6rem;">2do LUGAR (+50)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateTribu('g2', -1)">-</button>
+                    <b id="val-g2" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateTribu('g2', 1)">+</button>
+                </div>
+            </div>
+            <div class="card-custom bg-tribu" style="opacity:0.8">
+                <span style="font-size: 0.6rem;">3er LUGAR (+25)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateTribu('g3', -1)">-</button>
+                    <b id="val-g3" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateTribu('g3', 1)">+</button>
+                </div>
+            </div>
+            <div class="card-custom bg-tribu" style="opacity:0.8">
+                <span style="font-size: 0.6rem;">PARTICIPAR (+15)</span>
+                <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                    <button class="btn-step" onclick="updateTribu('part', -1)">-</button>
+                    <b id="val-part" class="count-val" style="color:white">0</b>
+                    <button class="btn-step" onclick="updateTribu('part', 1)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div id="total-score">0</div>
+            <button class="btn-action reset-btn" onclick="resetCurrent()">Limpiar Pestaña</button>
+            <button class="btn-action delete-btn" onclick="deleteCurrentSession()">Eliminar esta Operación</button>
         </div>
     </div>
 
-    <div class="footer">
-        <div id="total-score">0</div>
-        <button class="reset-btn" onclick="resetCurrent()">Limpiar Actual</button>
-    </div>
-</div>
+    <script>
+        const itemConfig = [
+            { id: 'biblia', name: "Biblia", pts: 100 },
+            { id: 'invitado', name: "Invitado", pts: 100 },
+            { id: 'botiquin', name: "Botiquín", pts: 50 },
+            { id: 'pañoleta', name: "Pañoleta", pts: 20 },
+            { id: 'paliacate', name: "Paliacate", pts: 10 },
+            { id: 'banderin', name: "Banderín", pts: 10 },
+            { id: 'playera', name: "Playera", pts: 5 },
+            { id: 'pantalon', name: "Pantalón", pts: 5 },
+            { id: 'tenis', name: "Tenis", pts: 5 },
+            { id: 'piola', name: "Piola", pts: 5 },
+            { id: 'libreta', name: "Libreta", pts: 5 },
+            { id: 'material', name: "Material", pts: 5 },
+            { id: 'pluma', name: "Pluma", pts: 1 }
+        ];
 
-<script>
-    const itemConfig = [
-        { id: 'biblia', name: "Biblia", pts: 100 }, { id: 'invitado', name: "Invitado", pts: 100 },
-        { id: 'botiquin', name: "Botiquín", pts: 50 }, { id: 'pañoleta', name: "Pañoleta", pts: 20 },
-        { id: 'paliacate', name: "Paliacate", pts: 10 }, { id: 'piola', name: "Piola", pts: 5 }
-    ];
+        let sessions = JSON.parse(localStorage.getItem('exodo_v2_sessions')) || [createEmptySession("Tribu 1")];
+        let activeIdx = 0;
 
-    let sessions = JSON.parse(localStorage.getItem('exodo_sessions')) || [createEmptySession("Operación 1")];
-    let activeIdx = 0;
+        function createEmptySession(name) {
+            let counts = {};
+            itemConfig.forEach(i => counts[i.id] = 0);
+            return { name, counts, extras: { mas: 0, menos: 0 }, tribu: { g1: 0, g2: 0, g3: 0, part: 0 } };
+        }
 
-    function createEmptySession(name) {
-        let counts = {};
-        itemConfig.forEach(i => counts[i.id] = 0);
-        return { name, counts, extras: { mas: 0, menos: 0 } };
-    }
-
-    function renderItems() {
-        const list = document.getElementById('items-list');
-        list.innerHTML = '';
-        itemConfig.forEach(item => {
-            const val = sessions[activeIdx].counts[item.id] || 0;
-            list.innerHTML += `
+        function renderItems() {
+            const list = document.getElementById('items-list');
+            list.innerHTML = '';
+            itemConfig.forEach(item => {
+                const val = sessions[activeIdx].counts[item.id] || 0;
+                list.innerHTML += `
                 <div class="item">
-                    <div class="item-info"><b>${item.name}</b><span>${item.pts} pts</span></div>
+                    <div class="item-info"><b>${item.name}</b><span>${item.pts} pts c/u</span></div>
                     <div class="counter-group">
                         <button class="btn-step" onclick="updateCount('${item.id}', -1)">-</button>
                         <span class="count-val">${val}</span>
                         <button class="btn-step" onclick="updateCount('${item.id}', 1)">+</button>
                     </div>
                 </div>`;
-        });
-    }
+            });
+        }
 
-    function renderTabs() {
-        const container = document.getElementById('tabs-list');
-        container.innerHTML = '';
-        sessions.forEach((s, idx) => {
-            container.innerHTML += `<div class="tab ${idx === activeIdx ? 'active' : ''}" onclick="switchSession(${idx})">${s.name || 'Sin nombre'}</div>`;
-        });
-    }
+        function renderTabs() {
+            const container = document.getElementById('tabs-list');
+            container.innerHTML = '';
+            sessions.forEach((s, idx) => {
+                const tab = document.createElement('div');
+                tab.className = `tab ${idx === activeIdx ? 'active' : ''}`;
+                tab.innerText = s.name || 'Sin nombre';
+                tab.onclick = () => { activeIdx = idx; loadActiveSession(); };
+                container.appendChild(tab);
+            });
+        }
 
-    function switchSession(idx) { activeIdx = idx; loadActiveSession(); }
+        function addNewSession() {
+            sessions.push(createEmptySession("Tribu " + (sessions.length + 1)));
+            activeIdx = sessions.length - 1;
+            loadActiveSession();
+        }
 
-    function addNewSession() {
-        sessions.push(createEmptySession("Operación " + (sessions.length + 1)));
-        activeIdx = sessions.length - 1;
+        function deleteCurrentSession() {
+            if (sessions.length <= 1) return resetCurrent();
+            sessions.splice(activeIdx, 1);
+            activeIdx = 0;
+            loadActiveSession();
+        }
+
+        function loadActiveSession() {
+            const s = sessions[activeIdx];
+            document.getElementById('input-nombre').value = s.name;
+            document.getElementById('val-mas').innerText = s.extras.mas;
+            document.getElementById('val-menos').innerText = s.extras.menos;
+            document.getElementById('val-g1').innerText = s.tribu.g1;
+            document.getElementById('val-g2').innerText = s.tribu.g2;
+            document.getElementById('val-g3').innerText = s.tribu.g3;
+            document.getElementById('val-part').innerText = s.tribu.part;
+            renderTabs();
+            renderItems();
+            calculate();
+        }
+
+        function updateCount(id, val) {
+            sessions[activeIdx].counts[id] = Math.max(0, (sessions[activeIdx].counts[id] || 0) + val);
+            saveAndRender();
+        }
+
+        function updateExtra(type, val) {
+            sessions[activeIdx].extras[type] = Math.max(0, (sessions[activeIdx].extras[type] || 0) + val);
+            document.getElementById('val-' + type).innerText = sessions[activeIdx].extras[type];
+            saveAndRender();
+        }
+
+        function updateTribu(type, val) {
+            sessions[activeIdx].tribu[type] = Math.max(0, (sessions[activeIdx].tribu[type] || 0) + val);
+            document.getElementById('val-' + type).innerText = sessions[activeIdx].tribu[type];
+            saveAndRender();
+        }
+
+        function saveCurrentData() {
+            sessions[activeIdx].name = document.getElementById('input-nombre').value;
+            renderTabs();
+            localStorage.setItem('exodo_v2_sessions', JSON.stringify(sessions));
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('exodo_v2_sessions', JSON.stringify(sessions));
+            renderItems();
+            calculate();
+        }
+
+        function calculate() {
+            let total = 0;
+            const s = sessions[activeIdx];
+            itemConfig.forEach(i => total += (s.counts[i.id] || 0) * i.pts);
+            total += (s.extras.mas * 15) - (s.extras.menos * 20);
+            total += (s.tribu.g1 * 100) + (s.tribu.g2 * 50) + (s.tribu.g3 * 25) + (s.tribu.part * 15);
+            document.getElementById('total-score').innerText = total;
+        }
+
+        function resetCurrent() {
+            sessions[activeIdx] = createEmptySession("Reset");
+            loadActiveSession();
+        }
+
         loadActiveSession();
-    }
-
-    function loadActiveSession() {
-        const s = sessions[activeIdx];
-        document.getElementById('input-nombre').value = s.name;
-        document.getElementById('val-mas').innerText = s.extras.mas;
-        document.getElementById('val-menos').innerText = s.extras.menos;
-        renderTabs();
-        renderItems();
-        calculate();
-    }
-
-    function updateCount(id, val) {
-        sessions[activeIdx].counts[id] = Math.max(0, (sessions[activeIdx].counts[id] || 0) + val);
-        saveAndRender();
-    }
-
-    function updateExtra(type, val) {
-        sessions[activeIdx].extras[type] = Math.max(0, (sessions[activeIdx].extras[type] || 0) + val);
-        document.getElementById('val-' + type).innerText = sessions[activeIdx].extras[type];
-        saveAndRender();
-    }
-
-    function saveCurrentData() {
-        sessions[activeIdx].name = document.getElementById('input-nombre').value;
-        saveAndRender();
-    }
-
-    function saveAndRender() {
-        localStorage.setItem('exodo_sessions', JSON.stringify(sessions));
-        renderItems();
-        renderTabs();
-        calculate();
-    }
-
-    function calculate() {
-        let total = 0;
-        const s = sessions[activeIdx];
-        itemConfig.forEach(i => total += (s.counts[i.id] || 0) * i.pts);
-        total += (s.extras.mas * 15) - (s.extras.menos * 20);
-        document.getElementById('total-score').innerText = total;
-    }
-
-    function resetCurrent() {
-        sessions[activeIdx] = createEmptySession("Operación " + (activeIdx + 1));
-        loadActiveSession();
-    }
-
-    // Inicializar
-    loadActiveSession();
-</script>
+    </script>
 </body>
+
 </html>
