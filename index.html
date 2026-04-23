@@ -4,250 +4,195 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>Calculadora Éxodo Safa</title>
+    <title>Éxodo Safa</title>
     <style>
-        /* Tipografía Moderna Geométrica (Google Fonts) */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
         :root {
-            /* Paleta Juvenil Energética */
-            --primary: #FF3D00; /* Naranja neón */
+            --primary: #FF3D00;
             --primary-gradient: linear-gradient(135deg, #FF3D00, #FF9100);
-            --secondary: #2979FF; /* Azul eléctrico */
-            --success: #00E676; /* Verde neón */
-            --danger: #FF1744; /* Rojo brillante */
-            --bg: #121212; /* Fondo oscuro moderno */
-            --card-bg: #1E1E1E; /* Fondo de tarjeta suave */
+            --bg: #121212;
+            --card-bg: #1E1E1E;
             --text-main: #FFFFFF;
             --text-muted: #A0A0A0;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text-main); margin: 0; padding: 10px; }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 15px;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+        /* Sistema de Pestañas (Tabs) */
+        .tabs-container { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; margin-bottom: 10px; }
+        .tab { background: var(--card-bg); padding: 8px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; font-size: 0.8rem; }
+        .tab.active { background: var(--primary-gradient); border: none; font-weight: bold; }
+        .add-tab { background: #333; color: white; border-radius: 50%; width: 35px; height: 35px; border: none; font-size: 1.5rem; cursor: pointer; flex-shrink: 0; }
 
-        .container {
-            background-color: var(--card-bg);
-            max-width: 450px;
-            width: 100%;
-            border-radius: 25px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+        .container { background-color: var(--card-bg); max-width: 450px; margin: 0 auto; border-radius: 25px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
 
-        h1 {
-            text-align: center;
-            font-weight: 800;
-            font-size: 1.6rem;
-            margin: 0 0 25px 0;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-        
-        /* Sección de Nombre */
-        .name-section { margin-bottom: 20px; text-align: center; }
-        label.name-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
-        input[type="text"]#input-nombre { 
-            width: 100%; padding: 12px; background-color: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 12px; 
-            font-size: 1rem; color: var(--text-main); font-weight: 600; text-align: center; box-sizing: border-box; outline: none; transition: 0.3s;
-        }
-        input[type="text"]#input-nombre:focus { border-color: var(--primary); background-color: rgba(255,255,255,0.1); }
+        h1 { text-align: center; font-weight: 800; font-size: 1.4rem; margin: 0 0 15px 0; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Lista de Items Scrollable */
-        .scroll-area { max-height: 30vh; overflow-y: auto; padding-right: 8px; margin-bottom: 20px; border-radius: 12px; }
-        .scroll-area::-webkit-scrollbar { width: 5px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .name-section input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid transparent; border-radius: 12px; color: white; text-align: center; font-weight: bold; outline: none; margin-bottom: 15px; }
+        .name-section input:focus { border-color: var(--primary); }
 
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; margin-bottom: 10px; background-color: rgba(255,255,255,0.03); border-radius: 15px; border: 1px solid transparent; transition: 0.3s; }
-        .item:hover { border-color: rgba(255,255,255,0.1); background-color: rgba(255,255,255,0.06); }
-        .item .name { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-        input[type="number"] { width: 55px; padding: 8px; background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: var(--primary); font-weight: bold; text-align: center; font-family: 'Poppins', sans-serif; font-size: 1rem; outline: none; }
-        input[type="number"]:focus { border-color: var(--primary); color: var(--text-main); }
+        /* Items con Botones +/- */
+        .scroll-area { max-height: 35vh; overflow-y: auto; margin-bottom: 15px; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 8px; }
+        .item-info b { font-size: 0.9rem; display: block; }
+        .item-info span { font-size: 0.7rem; color: var(--text-muted); }
+        
+        .counter-group { display: flex; align-items: center; gap: 12px; }
+        .btn-step { width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; font-weight: bold; cursor: pointer; }
+        .btn-step:active { transform: scale(0.9); background: var(--primary); }
+        .count-val { min-width: 20px; text-align: center; font-weight: bold; color: var(--primary); }
 
-        /* Sección de Tribu y Especiales */
-        .section-title { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 1.5px; text-align: center;}
-        .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .score-card { padding: 15px; border-radius: 18px; color: white; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; overflow: hidden;}
-        .score-card:after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255,255,255,0.1), transparent); transform: rotate(45deg); pointer-events: none;}
-        
-        .score-card span { font-size: 0.7rem; font-weight: 600; display: block; margin-bottom: 2px; }
-        
-        /* Colores de las tarjetas */
-        .bg-plus { background: linear-gradient(135deg, #00C853, #64DD17); } /* Verde energía */
-        .bg-minus { background: linear-gradient(135deg, #D50000, #FF1744); } /* Rojo alerta */
-        .bg-tribu { background: linear-gradient(135deg, #304FFE, #2979FF); } /* Azul eléctrico */
-        
-        .controls { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 8px; }
-        .btn-circle { width: 35px; height: 35px; border-radius: 12px; border: none; background: rgba(255,255,255,0.2); color: white; font-weight: bold; cursor: pointer; font-size: 1.3rem; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .btn-circle:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
-        
-        /* Total */
-        .footer { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; margin-top: 20px; }
-        #displayName { 
-            font-size: 1rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; 
-            background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 10px; display: inline-block; margin-bottom: 5px; letter-spacing: 1px;
-        }
-        #total-score { font-size: 4rem; font-weight: 800; color: var(--text-main); margin: 0; line-height: 1; letter-spacing: -2px; }
-        
-        .reset-btn { 
-            background: var(--primary-gradient); color: white; border: none; padding: 15px; border-radius: 15px; width: 100%; margin-top: 20px; 
-            font-weight: bold; font-size: 1rem; cursor: pointer; text-transform: uppercase; font-family: 'Poppins', sans-serif; letter-spacing: 1px; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 61, 0, 0.3);
-        }
-        .reset-btn:active { transform: translateY(2px); box-shadow: 0 2px 5px rgba(255, 61, 0, 0.2); }
+        /* Grid de Bonos */
+        .grid-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .score-card { padding: 12px; border-radius: 15px; text-align: center; color: white; }
+        .bg-plus { background: linear-gradient(135deg, #00C853, #64DD17); }
+        .bg-minus { background: linear-gradient(135deg, #D50000, #FF1744); }
+        .bg-tribu { background: #2979FF; }
+
+        /* Footer */
+        .footer { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        #total-score { font-size: 3.5rem; font-weight: 800; margin: 0; line-height: 1; }
+        .reset-btn { width: 100%; padding: 15px; border-radius: 15px; border: none; background: #333; color: white; font-weight: bold; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div class="tabs-container" id="tabs-list">
+    </div>
+<button class="add-tab" onclick="addNewSession()">+</button>
+
 <div class="container">
-    <h1>Éxodo Safa Pro</h1>
+    <h1>Puntuaciones Safa</h1>
     
     <div class="name-section">
-        <label class="name-label">Nombre de la Tribu:</label>
-        <input type="text" id="input-nombre" placeholder="BENJAMÍN" oninput="actualizarNombre(); calcular()">
+        <input type="text" id="input-nombre" placeholder="NOMBRE DE OPERACIÓN" oninput="saveCurrentData()">
     </div>
 
-    <div class="scroll-area" id="lista-items"></div>
+    <div class="scroll-area" id="items-list"></div>
 
-    <div class="section-title">Bonos y Disciplina</div>
     <div class="grid-scores">
         <div class="score-card bg-plus">
-            <span>PUNTOS MÁS (+15)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarExtra('mas', -1)">-</button>
+            <span style="font-size: 0.7rem; font-weight: bold;">PUNTOS MÁS (+15)</span>
+            <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                <button class="btn-step" onclick="updateExtra('mas', -1)">-</button>
                 <b id="val-mas">0</b>
-                <button class="btn-circle" onclick="cambiarExtra('mas', 1)">+</button>
+                <button class="btn-step" onclick="updateExtra('mas', 1)">+</button>
             </div>
         </div>
         <div class="score-card bg-minus">
-            <span>PUNTOS MENOS (-20)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarExtra('menos', -1)">-</button>
+            <span style="font-size: 0.7rem; font-weight: bold;">PUNTOS MENOS (-20)</span>
+            <div class="counter-group" style="justify-content: center; margin-top: 5px;">
+                <button class="btn-step" onclick="updateExtra('menos', -1)">-</button>
                 <b id="val-menos">0</b>
-                <button class="btn-circle" onclick="cambiarExtra('menos', 1)">+</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="section-title">Resultados Tribu</div>
-    <div class="grid-scores">
-        <div class="score-card bg-tribu">
-            <span>1er LUGAR (+100)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g1', -1)">-</button>
-                <b id="val-g1">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g1', 1)">+</button>
-            </div>
-        </div>
-        <div class="score-card bg-tribu">
-            <span>2do LUGAR (+50)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g2', -1)">-</button>
-                <b id="val-g2">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g2', 1)">+</button>
-            </div>
-        </div>
-        <div class="score-card bg-tribu">
-            <span>3er LUGAR (+25)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('g3', -1)">-</button>
-                <b id="val-g3">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('g3', 1)">+</button>
-            </div>
-        </div>
-        <div class="score-card bg-tribu">
-            <span>PARTICIPAR (+15)</span>
-            <div class="controls">
-                <button class="btn-circle" onclick="cambiarTribu('part', -1)">-</button>
-                <b id="val-part">0</b>
-                <button class="btn-circle" onclick="cambiarTribu('part', 1)">+</button>
+                <button class="btn-step" onclick="updateExtra('menos', 1)">+</button>
             </div>
         </div>
     </div>
 
     <div class="footer">
-        <div id="displayNameContainer">
-            <span id="displayName">MI CUENTA</span>
-        </div>
         <div id="total-score">0</div>
-        <button class="reset-btn" onclick="resetear()">Limpiar Todo</button>
+        <button class="reset-btn" onclick="resetCurrent()">Limpiar Actual</button>
     </div>
 </div>
 
 <script>
-    const items = [
-        { nombre: "Biblia", pts: 100 }, { nombre: "Invitado", pts: 100 },
-        { nombre: "Botiquín", pts: 50 }, { nombre: "Pañoleta", pts: 20 },
-        { nombre: "Paliacate", pts: 10 }, { nombre: "Banderín", pts: 10 },
-        { nombre: "Playera", pts: 5 }, { nombre: "Pantalón", pts: 5 },
-        { nombre: "Tenis", pts: 5 }, { nombre: "Piola", pts: 5 },
-        { nombre: "Libreta", pts: 5 }, { nombre: "Material", pts: 5 },
-        { nombre: "Pluma", pts: 1 }
+    const itemConfig = [
+        { id: 'biblia', name: "Biblia", pts: 100 }, { id: 'invitado', name: "Invitado", pts: 100 },
+        { id: 'botiquin', name: "Botiquín", pts: 50 }, { id: 'pañoleta', name: "Pañoleta", pts: 20 },
+        { id: 'paliacate', name: "Paliacate", pts: 10 }, { id: 'piola', name: "Piola", pts: 5 }
     ];
 
-    let extras = { mas: 0, menos: 0 };
-    let tribu = { g1: 0, g2: 0, g3: 0, part: 0 };
+    let sessions = JSON.parse(localStorage.getItem('exodo_sessions')) || [createEmptySession("Operación 1")];
+    let activeIdx = 0;
 
-    const listaContainer = document.getElementById('lista-items');
-    items.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `<span class="name">${item.nombre}</span><input type="number" id="input-${index}" value="0" min="0" oninput="calcular()">`;
-        listaContainer.appendChild(div);
-    });
-
-    function actualizarNombre() {
-        const nombreInput = document.getElementById('input-nombre').value;
-        const displayName = document.getElementById('displayName');
-        displayName.innerText = nombreInput.trim() !== "" ? nombreInput : "MI CUENTA";
+    function createEmptySession(name) {
+        let counts = {};
+        itemConfig.forEach(i => counts[i.id] = 0);
+        return { name, counts, extras: { mas: 0, menos: 0 } };
     }
 
-    function cambiarExtra(t, v) {
-        extras[t] = Math.max(0, extras[t] + v);
-        document.getElementById(`val-${t}`).innerText = extras[t];
-        calcular();
-    }
-
-    function cambiarTribu(t, v) {
-        tribu[t] = Math.max(0, tribu[t] + v);
-        document.getElementById(`val-${t}`).innerText = tribu[t];
-        calcular();
-    }
-
-    function calcular() {
-        let total = 0;
-        items.forEach((item, index) => {
-            total += (parseInt(document.getElementById(`input-${index}`).value) || 0) * item.pts;
+    function renderItems() {
+        const list = document.getElementById('items-list');
+        list.innerHTML = '';
+        itemConfig.forEach(item => {
+            const val = sessions[activeIdx].counts[item.id] || 0;
+            list.innerHTML += `
+                <div class="item">
+                    <div class="item-info"><b>${item.name}</b><span>${item.pts} pts</span></div>
+                    <div class="counter-group">
+                        <button class="btn-step" onclick="updateCount('${item.id}', -1)">-</button>
+                        <span class="count-val">${val}</span>
+                        <button class="btn-step" onclick="updateCount('${item.id}', 1)">+</button>
+                    </div>
+                </div>`;
         });
-        total += (extras.mas * 15) - (extras.menos * 20);
-        total += (tribu.g1 * 100) + (tribu.g2 * 50) + (tribu.g3 * 25) + (tribu.part * 15);
+    }
+
+    function renderTabs() {
+        const container = document.getElementById('tabs-list');
+        container.innerHTML = '';
+        sessions.forEach((s, idx) => {
+            container.innerHTML += `<div class="tab ${idx === activeIdx ? 'active' : ''}" onclick="switchSession(${idx})">${s.name || 'Sin nombre'}</div>`;
+        });
+    }
+
+    function switchSession(idx) { activeIdx = idx; loadActiveSession(); }
+
+    function addNewSession() {
+        sessions.push(createEmptySession("Operación " + (sessions.length + 1)));
+        activeIdx = sessions.length - 1;
+        loadActiveSession();
+    }
+
+    function loadActiveSession() {
+        const s = sessions[activeIdx];
+        document.getElementById('input-nombre').value = s.name;
+        document.getElementById('val-mas').innerText = s.extras.mas;
+        document.getElementById('val-menos').innerText = s.extras.menos;
+        renderTabs();
+        renderItems();
+        calculate();
+    }
+
+    function updateCount(id, val) {
+        sessions[activeIdx].counts[id] = Math.max(0, (sessions[activeIdx].counts[id] || 0) + val);
+        saveAndRender();
+    }
+
+    function updateExtra(type, val) {
+        sessions[activeIdx].extras[type] = Math.max(0, (sessions[activeIdx].extras[type] || 0) + val);
+        document.getElementById('val-' + type).innerText = sessions[activeIdx].extras[type];
+        saveAndRender();
+    }
+
+    function saveCurrentData() {
+        sessions[activeIdx].name = document.getElementById('input-nombre').value;
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('exodo_sessions', JSON.stringify(sessions));
+        renderItems();
+        renderTabs();
+        calculate();
+    }
+
+    function calculate() {
+        let total = 0;
+        const s = sessions[activeIdx];
+        itemConfig.forEach(i => total += (s.counts[i.id] || 0) * i.pts);
+        total += (s.extras.mas * 15) - (s.extras.menos * 20);
         document.getElementById('total-score').innerText = total;
     }
 
-    function resetear() {
-        items.forEach((_, i) => document.getElementById(`input-${i}`).value = 0);
-        extras = { mas: 0, menos: 0 }; tribu = { g1: 0, g2: 0, g3: 0, part: 0 };
-        ['mas', 'menos', 'g1', 'g2', 'g3', 'part'].forEach(id => document.getElementById(`val-${id}`).innerText = 0);
-        document.getElementById('input-nombre').value = "";
-        actualizarNombre();
-        calcular();
+    function resetCurrent() {
+        sessions[activeIdx] = createEmptySession("Operación " + (activeIdx + 1));
+        loadActiveSession();
     }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
-    }
+    // Inicializar
+    loadActiveSession();
 </script>
 </body>
 </html>
