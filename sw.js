@@ -1,4 +1,4 @@
-const cacheName = 'v1.10-calculadora-exodo'; 
+const cacheName = 'v11.1-calculadora-exodo'; 
 const assets = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
